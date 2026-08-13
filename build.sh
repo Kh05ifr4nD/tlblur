@@ -28,6 +28,7 @@ pushd llvm
 popd
 
 echo "--- [ building Intel SGX SDK ] ---"
+export TLBLUR_LLVM=$TLBLUR_DIR/llvm/install
 pushd sgx-step/sdk/intel-sdk
   ./install_SGX_SDK.sh
 popd
@@ -36,7 +37,6 @@ echo "--- [ building OpenSSL ] ---"
 pushd enclaves/openssl/intel-sgx-ssl
   wget https://github.com/openssl/openssl/releases/download/openssl-3.0.13/openssl-3.0.13.tar.gz -O openssl_source/openssl-3.0.13.tar.gz
   pushd Linux
-    export TLBLUR_LLVM=$TLBLUR_DIR/llvm/install
     make clean all
     sudo make install
   popd

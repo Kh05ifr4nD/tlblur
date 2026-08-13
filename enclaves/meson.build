@@ -17,14 +17,14 @@ foreach e : enclaves
   inc = ['./common', '../prefetcher'] + e['include']
 
   # NOTE: order of dependencies actually matters, sgx_trts must come last!
-  dep = [sgx_tstdc, sgx_tservice, sgx_tcrypto]
+  dep = [sgx_tstdc_tlblur, sgx_tservice, sgx_tcrypto]
 
   if e.has_key('dependencies')
     dep += e['dependencies']
   endif
 
   tlblur_deps = dep
-  base_deps = dep
+  base_deps = [sgx_tstdc, sgx_tservice, sgx_tcrypto]
 
   if e.has_key('tlblur_deps')
     tlblur_deps += e['tlblur_deps']
@@ -244,7 +244,7 @@ foreach e : enclaves
   exe = executable('test-' + e['name'], e['untrusted_sources'], 
     untrusted_edl,
     link_with : [test_common, untrusted, sgx_step], 
-    dependencies : [sgx_urts, sgx_uae_service, sgx_usgxssl],
+    dependencies : [sgx_urts, sgx_uae_service] + e.get('untrusted_deps', []),
     include_directories : ['./common', '../sgx-step'],
     install : true,
     c_args : c_args,
